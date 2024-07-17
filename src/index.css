@@ -3,31 +3,31 @@
 @tailwind utilities;
 
 @layer components {
- 
 }
 
-*::after, *::before {
+*::after,
+*::before {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
 body {
-  font-family: 'Geist', sans-serif;
+  font-family: "Geist", sans-serif;
   display: flex;
   flex-direction: column;
-  background-color: #7b4e10 ;
+  background-color: #7b4e10;
+  margin-bottom: 5vh;
 }
 
-body, html {
+body,
+html {
   height: 100%;
 }
 
 #root {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex-grow: 1;
+  overflow: auto;
 }
-
-
-

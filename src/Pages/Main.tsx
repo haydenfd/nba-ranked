@@ -1,31 +1,39 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Nav } from '../Components';
-import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
-import { BASE_URL } from '../APIConfig/config';
-import { Drag } from '../Components/Draggable';
-import { Button } from '@nextui-org/react';
-import { GameStateContext } from '../Context/GameStateContext';
-import { GuessCrumbs } from '../Components/GuessCrumbs';
+import React, { useContext, useEffect, useState } from "react";
+import { Nav } from "../Components";
+import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
+import { BASE_URL } from "../APIConfig/config";
+import { Drag } from "../Components/Draggable";
+import { Button } from "@nextui-org/react";
+import { GameStateContext } from "../Context/GameStateContext";
+import { GuessCrumbs } from "../Components/Crumbs";
+import { toast, Toaster } from "sonner";
 
 type NumAttemptsType = 0 | 1 | 2 | 3;
 
 export const Main = () => {
-
-  const { gameState, incrementAttempts, canSubmit, setItems } = useContext(GameStateContext);
+  const {
+    gameState,
+    incrementAttempts,
+    canSubmit,
+    setItems,
+    onSubmit,
+    setCorrect,
+  } = useContext(GameStateContext);
   useEffect(() => {
-
     // check if new user via localStorage
-    if (!localStorage.getItem('user_uuid')) {
+    if (!localStorage.getItem("user_uuid")) {
       const initUser = async () => {
         axios.get(`${BASE_URL}init-user`).then((res) => {
           const { user_uuid, session_uuid, players } = res.data;
-          localStorage.setItem('user_uuid', user_uuid);
-          localStorage.setItem('session_uuid', session_uuid);
-          localStorage.setItem('session_active_status', "true");
-          localStorage.setItem('players', JSON.stringify(players));
+          localStorage.setItem("user_uuid", user_uuid);
+          localStorage.setItem("session_uuid", session_uuid);
+          localStorage.setItem("session_active_status", "true");
+          localStorage.setItem("players", JSON.stringify(players));
           setItems(players);
-        })
-      }
+          console.log(players);
+          setCorrect(players);
+        });
+      };
 
       initUser();
     }
@@ -45,15 +53,23 @@ export const Main = () => {
     // }
   }, []);
 
-
   return (
-    <div className='w-full h-full flex flex-col'>
-        <Nav />
-        <section className='w-3/5 mx-auto text-center my-10'>
-          <h2 className='font-bold text-white text-3xl'>ATTEMPTS LEFT: {3 - gameState.attempts}</h2>
-        </section>
-        <GuessCrumbs />
-        {/* <Slider 
+    <div className="w-full h-full flex flex-col pb-10">
+      <Nav />
+      <section className="w-3/5 mx-auto text-center my-4">
+        <h2 className="font-bold text-white text-3xl">
+          ATTEMPTS LEFT: {3 - gameState.attempts}
+        </h2>
+      </section>
+      {gameState.attempts > 0 && (
+        <GuessCrumbs
+          isVisible={gameState.attempts > 0}
+          guesses={Array.from(
+            gameState.selected.slice(0, gameState.selected.length),
+          )}
+        />
+      )}
+      {/* <Slider 
       label="Select a value" 
       color="foreground"
       size="md"
@@ -69,18 +85,34 @@ export const Main = () => {
         </div>
       )}
     /> */}
-        <div className='flex-1 mt-8 w-11/12 mx-auto'>
-          <Drag />
-        </div>
-        <div className='mt-10 gap-8 w-full mx-auto flex justify-center'>
-          <Button className='p-6 bg-slate-300 border-[6px] border-slate-700 text-slate-700 text-lg rounded-none font-bold hover:bg-slate-850  hover:border-black'>
-            Reset
-          </Button>
-          <Button onClick={incrementAttempts} isDisabled={!canSubmit}
-            className='p-6 bg-slate-300 border-[6px] border-slate-700 text-slate-700 text-lg rounded-none font-bold hover:bg-slate-850  hover:border-black'>
-            Submit
-          </Button>
-        </div>
+      <div className="flex-1 mt-8 w-11/12 mx-auto">
+        <Drag />
+      </div>
+      <div className="mt-10 gap-8 w-full mx-auto flex justify-center">
+        <Button className="p-6 bg-slate-300 border-[6px] border-slate-700 text-slate-700 text-lg rounded-none font-bold hover:bg-slate-850  hover:border-black">
+          Reset
+        </Button>
+        <Button
+          onClick={() => {
+            incrementAttempts();
+            let x = onSubmit();
+            toast(`You got ${x} ${x === 1 ? "guess" : "guesses"} right`);
+          }}
+          isDisabled={!canSubmit()}
+          className="p-6 bg-slate-300 border-[6px] border-slate-700 text-slate-700 text-lg rounded-none font-bold hover:bg-slate-850  hover:border-black"
+        >
+          Submit
+        </Button>
+        <Toaster
+          position="top-center"
+          expand={false}
+          toastOptions={{
+            style: {
+              background: "red",
+            },
+          }}
+        />
+      </div>
     </div>
-  )
-}
+  );
+};

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Main } from './Pages/Main';
-import { GameStateProvider } from './Context/GameStateContext';
+import React from "react";
+import { Main } from "./Pages/Main";
+import { GameStateProvider } from "./Context/GameStateContext";
 
 function App() {
   return (
