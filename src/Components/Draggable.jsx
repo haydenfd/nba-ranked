@@ -31,113 +31,17 @@ const getListStyle = (isDraggingOver) => ({
 
 export const Drag = () => {
   const { setItems, gameState, setSelected } = useContext(GameStateContext);
-  useEffect(() => {
-    const x = localStorage.getItem("players", []);
-
-    if (x) {
-      setItems(JSON.parse(x));
-    }
-  }, []);
-
-  // const [originalSnapshot, setOriginalSnapshot] = useState([]);
-  // const [correctOrder, setCorrectOrder] = useState([]);
-  // const [attempts, setAttempts] = useState(0);
-  // const [result, setResult] = useState([]);
-  // const [solutionModalIsOpen, setSolutionModalIsOpen] = useState(false);
-
-  // const openSolutionModal = () => setSolutionModalIsOpen(true);
-  // const closeSolutionModal = () => setSolutionModalIsOpen(false);
-
-  // useEffect(() => {
-  //     fetchData();
-  // }, []);
-
-  // useEffect(() => {
-
-  //     if (attempts === 0) {
-  //         return;
-  //     }
-
-  //     let correctGuesses = countCorrectGuesses(selected, correctOrder, false)
-  //     let evaluated = compareOrder(Array.from(correctOrder), selected);
-  //     console.log(evaluated)
-  //     setResult(evaluated)
-
-  //     if (correctGuesses === 5) {
-
-  //         openSolutionModal() // show that user has finished game
-  //         return;
-  //     }
-
-  //     if (attempts === 1) {
-  //         SendCorrectGuessNotification(correctGuesses)
-  //         return;
-  //     }
-
-  //     if (attempts === 2) {
-  //         openSolutionModal() // signal end of game
-
-  //     }
-  //   }, [attempts]); // This effect depends on `attempts`
-
-  //   const handleSubmitClick = () => {
-  //     if (selected.length !== 5) {
-  //       SendInvalidSubmissionNotification();
-  //       return;
-  //     }
-
-  //     setAttempts(attempts => attempts + 1);
-  //   };
-
-  // const handleResetClick = () => {
-  //     setSelected([]);
-  //     setItems(originalSnapshot);
-  // };
-
-  // const fetchData = async () => {
-  //     let response = await axios(server_url);
-  //     let correct_data = response.data.correct_order
-  //     response = response.data.data;
-  //     let result = response.map(player => ({
-  //         id: player.PLAYER_ID.toString(),
-  //         name: player.PLAYER_NAME,
-  //     }));
-
-  //     setItems(result);
-  //     setOriginalSnapshot(result);
-
-  //     let correct = correct_data.map(player => ({
-  //         id: player.PLAYER_ID.toString(),
-  //         name: player.PLAYER_NAME,
-  //         ppg: player.PPG
-  //     }))
-
-  //     setCorrectOrder(correct);
-
-  // };
-
-  // const ResetGameState = async () => {
-
-  //     setAttempts(0)
-  //     setCorrectOrder([])
-  //     setSelected([])
-  //     setItems(null)
-  //     await fetchData()
-  // }
 
   const onDragEnd = (result) => {
     const { source, destination } = result;
 
-    // Exit if dropped outside any droppable area
     if (!destination) return;
 
-    // Destructuring for clarity
     const srcIndex = source.index;
     const destIndex = destination.index;
     const srcDroppableId = source.droppableId;
     const destDroppableId = destination.droppableId;
 
-    // Moving within the same list
     if (srcDroppableId === destDroppableId) {
       const list =
         srcDroppableId === "droppable"
@@ -148,7 +52,6 @@ export const Drag = () => {
 
       srcDroppableId === "droppable" ? setItems(list) : setSelected(list);
     } else {
-      // Moving between lists
       const sourceList =
         srcDroppableId === "droppable"
           ? [...gameState.items]
@@ -169,14 +72,6 @@ export const Drag = () => {
       }
     }
   };
-
-  // if (items === null) {
-  //     return <Spinner size='lg' label='Loading...' color='primary' className='mt-[20vh]'
-  //     classNames={{
-  //         base: 'scale-[200%]',
-  //         label: 'text-white',
-  //     }}/>;
-  // }
 
   return (
     <>

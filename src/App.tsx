@@ -1,15 +1,19 @@
 import React from "react";
 import { Main } from "./Pages/Main";
 import { GameStateProvider } from "./Context/GameStateContext";
+import { AttemptsContextProvider } from "./Context/AttemptsContext";
+import { ScoreContextProvider } from "./Context/ScoreContext";
 
-function App() {
+export function App() {
   return (
     <>
-      <GameStateProvider>
-        <Main />
-      </GameStateProvider>
+      <ScoreContextProvider>
+      <AttemptsContextProvider>
+        <GameStateProvider>
+          <Main />
+        </GameStateProvider>
+      </AttemptsContextProvider>
+      </ScoreContextProvider>
     </>
   );
 }
-
-export default App;

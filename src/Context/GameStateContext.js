@@ -1,29 +1,164 @@
 // src/contexts/GameStateContext.js
 import React, { createContext, useState } from "react";
 
-// Create the context
 export const GameStateContext = createContext();
 
-export const GameStateProvider = ({ children }) => {
-  const [gameState, setGameState] = useState({
-    attempts: 0,
-    items: [],
-    selected: [],
-    correct: {},
-    scores: [],
-  });
+const DEFAULT_GAME_STATE = {
+  attempts: 0,
+  items: [],
+  selected: [],
+  soln_map: {},
+  scores: [],
+  snapshot: {},
+  status: 0,
+};
 
-  const incrementAttempts = () => {
+export const GameStateProvider = ({ children }) => {
+  const [gameState, setGameState] = useState(DEFAULT_GAME_STATE);
+
+  const didUserWin =
+    gameState.scores.length === 5 &&
+    gameState.scores.every((value) => value === 0);
+  const didUserLose = !didUserWin && gameState.attempts === 3;
+  const correctGuesses = gameState.scores.filter((value) => value === 0).length;
+  const canSubmitGuess =
+    !didUserWin &&
+    !didUserLose &&
+    gameState.items.length === 0 &&
+    gameState.selected.length === 5; // TODO: Tweak
+
+  const computeScores = (selected, soln_map) => {
+    let scores_computed = [];
+    let snapshot_computed = [];
+    for (let n = 0; n < gameState.selected.length; n++) {
+      const currIdx = n;
+      const currPlayer = gameState.selected[n];
+      snapshot_computed.push(currPlayer);
+
+      const solnMapIdx = gameState.soln_map[currPlayer.PLAYER_ID];
+
+      let playerEval = Math.abs(currIdx - solnMapIdx);
+      if (playerEval > 1) {
+        playerEval = -1;
+      }
+
+      scores_computed.push(playerEval);
+    }
+
+    setScores(scores_computed);
+    return scores_computed;
+  };
+
+  const saveSnapshot = () => {
+    let snap = {
+      items: [],
+      selected: [],
+    };
+    for (let i = 0; i < gameState.items.length; i++) {
+      snap.items.push(gameState.items[i]);
+    }
+
+    for (let j = 0; j < gameState.selected.length; j++) {
+      snap.selected.push(gameState.selected[j]);
+    }
+
+    setGameState((prev) => ({
+      ...prev,
+      snapshot: snap,
+    }));
+
+    localStorage.setItem("snapshot", JSON.stringify(snap));
+    console.log(snap);
+    return snap;
+  };
+
+  const makeGuess = () => {
+    const newAttempt = gameState.attempts + 1;
+    setAttempts(newAttempt);
+    localStorage.setItem("attempts", String(newAttempt));
+    return newAttempt;
+  };
+
+  const handleSubmit = () => {
+    // first, compute scores and check if user got soln. If so, set session_status to 1 for WON
+    // at the same time, also push each selected/guess to the snapshot
+
+    let scores = computeScores(gameState.selected, gameState.soln_map);
+    let snap = saveSnapshot();
+    let newAttempt = makeGuess();
+    if (didUserWin) {
+      console.log("Lmao");
+      setGameState((prev) => ({ ...prev, status: 1 }));
+    } else if (didUserLose) {
+      console.log("Lost");
+      setGameState((prev) => ({ ...prev, status: -1 }));
+    } else {
+    }
+    // let scores_computed = [];
+    // let snapshot_computed = [];
+    // for (let n = 0; n < gameState.selected.length; n++) {
+
+    //   const currIdx = n;
+    //   const currPlayer = gameState.selected[n];
+    //   snapshot_computed.push(currPlayer);
+
+    //   const solnMapIdx = gameState.soln_map[currPlayer.PLAYER_ID];
+
+    //   let playerEval = Math.abs(currIdx - solnMapIdx);
+    //   if (playerEval > 1) {
+    //     playerEval = -1;
+    //   }
+
+    //   scores_computed.push(playerEval);
+    // }
+
+    // const didUserWin = scores_computed.every(value => value === 0);
+
+    // if (didUserWin) {
+    //   setGameState((prevState) => ({
+    //     ...prevState,
+    //     session_status: 1,
+    //     attempts: gameState.attempts + 1,
+    //     snapshot: snapshot_computed,
+    //   }));
+
+    // }
+
+    // else {
+    //   const newAttempts = gameState.attempts + 1;
+    //   const didUserLose = newAttempts === 3;
+
+    //   if (didUserLose) {
+    //     setGameState((prevState) => ({
+    //       ...prevState,
+    //       session_status: -1,
+    //       attempts: 3,
+    //       snapshot: snapshot_computed,
+    //     }));
+
+    //   }
+    // }
+
+    // localStorage.setItem()
+  };
+
+  const setAttempts = (num) => {
     setGameState((prevState) => ({
       ...prevState,
-      attempts: prevState.attempts + 1,
+      attempts: num,
     }));
   };
 
-  const resetGame = () => {
-    setGameState({
-      attempts: 0,
-    });
+  const incrementAttempts = () => {
+    const newAttempts = gameState.attempts + 1;
+
+    setGameState((prevState) => ({
+      ...prevState,
+      attempts: newAttempts,
+      sessionStatus: newAttempts === 3 ? -1 : 0,
+    }));
+
+    console.log("You lost!");
   };
 
   const moveToSelected = (item) => {
@@ -58,16 +193,15 @@ export const GameStateProvider = ({ children }) => {
     });
   };
 
-  const setCorrect = (_items) => {
-    const map = {};
-
-    for (let i = 0; i < _items.length; i++) {
-      const currPlayer = _items[i];
-      map[currPlayer.PLAYER_NAME] = i;
-    }
-
+  const setSnapshot = (_items) => {
     setGameState((prevState) => {
-      return { ...prevState, correct: map };
+      return { ...prevState, snapshot: _items };
+    });
+  };
+
+  const setSolnMap = (_items) => {
+    setGameState((prevState) => {
+      return { ...prevState, soln_map: _items };
     });
   };
 
@@ -85,45 +219,65 @@ export const GameStateProvider = ({ children }) => {
     );
   };
 
-  const onSubmit = () => {
-    console.log(gameState.correct);
+  // const onSubmit = () => {
 
-    let res = [];
-    for (let i = 0; i < gameState.selected.length; i++) {
-      const selectedPlayerIdx = i;
-      const correctPlayerIdx =
-        gameState.correct[gameState.selected[i].PLAYER_NAME];
-      let ev = Math.abs(correctPlayerIdx - selectedPlayerIdx);
+  //   const scores_comp = [];
+  //   const snap = [];
 
-      if (ev > 1) {
-        ev = -1;
-      }
-      // console.log(`${gameState.selected[i].PLAYER_NAME} : ${ev}`);
-      res.push(ev);
-    }
-    setScores(res);
-    let count = 0;
-    for (let i = 0; i < res.length; i++) {
-      if (res[i] === 0) {
-        count += 1;
-      }
-    }
-    return count;
-  };
+  //   for (let i = 0; i < gameState.selected.length; i++) {
+  //     const currIdx = i;
+  //     const currPlayerId = gameState.selected[i].PLAYER_ID;
+  //     snap.push(gameState.selected[i]);
+  //     const solnMapIdx = gameState.soln_map[currPlayerId];
+  //     let abs_diff = Math.abs(currIdx - solnMapIdx);
+
+  //     if (abs_diff > 1) {
+  //       abs_diff = -1
+  //     }
+
+  //     scores_comp.push(abs_diff);
+  //   }
+
+  //   setScores(scores_comp);
+  //   setGameState((prev) => {
+  //     return {...prev, snapshot: snap}
+  //   })
+
+  //   console.log(scores_comp);
+
+  //   let count = 0;
+  //   for (let i = 0; i < scores_comp.length ; i++) {
+  //     if (scores_comp[i] === 0) {
+  //       count += 1;
+  //     }
+  //   }
+
+  //   if (count === 5) {
+  //     setGameState((prev) => ({...prev, sessionStatus: 1}))
+  //     console.log('You won!');
+  //   }
+
+  //   localStorage.setItem("snapshot", JSON.stringify(gameState.selected));
+
+  //   return count;
+  // };
 
   return (
     <GameStateContext.Provider
       value={{
-        setCorrect,
+        setSolnMap,
         gameState,
         incrementAttempts,
-        resetGame,
         moveToItems,
         moveToSelected,
         setItems,
         canSubmit,
         setSelected,
-        onSubmit,
+        handleSubmit,
+        setAttempts,
+        setSnapshot,
+        correctGuesses,
+        canSubmitGuess,
       }}
     >
       {children}

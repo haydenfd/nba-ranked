@@ -7,50 +7,56 @@ import { Button } from "@nextui-org/react";
 import { GameStateContext } from "../Context/GameStateContext";
 import { GuessCrumbs } from "../Components/Crumbs";
 import { toast, Toaster } from "sonner";
-
-type NumAttemptsType = 0 | 1 | 2 | 3;
+import { useAttemptsContext } from "../Context/AttemptsContext";
 
 export const Main = () => {
+  const { attempts, incrementAttempts, isGameOver, resetAttempts } =
+    useAttemptsContext();
+
   const {
     gameState,
-    incrementAttempts,
-    canSubmit,
     setItems,
-    onSubmit,
-    setCorrect,
+    setSolnMap,
+    // setAttempts,
+    setSelected,
+    setSnapshot,
+    handleSubmit,
   } = useContext(GameStateContext);
+
   useEffect(() => {
     // check if new user via localStorage
     if (!localStorage.getItem("user_uuid")) {
       const initUser = async () => {
         axios.get(`${BASE_URL}init-user`).then((res) => {
-          const { user_uuid, session_uuid, players } = res.data;
+          console.log(res.data);
+
+          const { user_uuid, session_uuid, players, soln_map } = res.data;
+
           localStorage.setItem("user_uuid", user_uuid);
           localStorage.setItem("session_uuid", session_uuid);
-          localStorage.setItem("session_active_status", "true");
+
           localStorage.setItem("players", JSON.stringify(players));
+          // localStorage.setItem("attempts", JSON.stringify(0));
+          localStorage.setItem("soln_map", JSON.stringify(soln_map));
+          localStorage.setItem("session_status", String(0)); // 0 => ongoing, -1 => user lost, 1 => user won
+
           setItems(players);
-          console.log(players);
-          setCorrect(players);
+          setSolnMap(soln_map);
         });
       };
 
       initUser();
+    } else {
+      const x = localStorage.getItem("soln_map");
+      if (x) {
+        setSolnMap(JSON.parse(x));
+      }
+      const y = localStorage.getItem("snapshot");
+      if (y) {
+        setSelected(JSON.parse(y));
+        setSnapshot(JSON.parse(y));
+      }
     }
-
-    // check if user ended a round but did not start a new one (just display old session)
-    // else if (!localStorage.getItem('is_active_session')) {
-    //   axios.get(`${BASE_URL}retrieve-inactive-session`).then((res) => {
-    //     return res.data
-    //   }).then((resp) => console.log(resp));
-    // }
-
-    // retrieve current session. If we are here, it's established that the user has been to the website before and has an active session (CHECK?)
-    // else {
-    //   axios.get(`${BASE_URL}retrieve-active-session`).then((res) => {
-    //     return res.data;
-    //   }).then(resp => console.log(resp));
-    // }
   }, []);
 
   return (
@@ -58,47 +64,26 @@ export const Main = () => {
       <Nav />
       <section className="w-3/5 mx-auto text-center my-4">
         <h2 className="font-bold text-white text-3xl">
-          ATTEMPTS LEFT: {3 - gameState.attempts}
+          ATTEMPTS LEFT: {3 - attempts}
         </h2>
       </section>
-      {gameState.attempts > 0 && (
-        <GuessCrumbs
-          isVisible={gameState.attempts > 0}
-          guesses={Array.from(
-            gameState.selected.slice(0, gameState.selected.length),
-          )}
-        />
-      )}
-      {/* <Slider 
-      label="Select a value" 
-      color="foreground"
-      size="md"
-      orientation='vertical'
-      className="max-w-md"
-      // isDisabled={true}
-      defaultValue={0}
-      renderThumb={(props) => (
-        <div
-          {...props}
-          className='invisible'
-        >
-        </div>
-      )}
-    /> */}
+      {/* <GuessCrumbs /> */}
       <div className="flex-1 mt-8 w-11/12 mx-auto">
         <Drag />
       </div>
       <div className="mt-10 gap-8 w-full mx-auto flex justify-center">
-        <Button className="p-6 bg-slate-300 border-[6px] border-slate-700 text-slate-700 text-lg rounded-none font-bold hover:bg-slate-850  hover:border-black">
+        <Button
+          className="p-6 bg-slate-300 border-[6px] border-slate-700 text-slate-700 text-lg rounded-none font-bold hover:bg-slate-850  hover:border-black"
+          onClick={resetAttempts}
+        >
           Reset
         </Button>
         <Button
           onClick={() => {
             incrementAttempts();
-            let x = onSubmit();
-            toast(`You got ${x} ${x === 1 ? "guess" : "guesses"} right`);
+            console.log(gameState.selected);
           }}
-          isDisabled={!canSubmit()}
+          isDisabled={isGameOver}
           className="p-6 bg-slate-300 border-[6px] border-slate-700 text-slate-700 text-lg rounded-none font-bold hover:bg-slate-850  hover:border-black"
         >
           Submit
