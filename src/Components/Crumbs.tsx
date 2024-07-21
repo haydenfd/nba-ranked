@@ -1,21 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
-import { GameStateContext } from "../Context/GameStateContext";
+import { useSelector } from "react-redux";
+import { RootState } from "../Store/store";
 
 export const GuessCrumbs = () => {
-  const { gameState } = useContext(GameStateContext);
+  const snapshot = useSelector((state: RootState) => state.snapshot);
 
-  useEffect(() => {
-    console.log("change");
-  }, [gameState.snapshot]);
   return (
     <div className={`w-full mx-auto flex justify-center `}>
       <Breadcrumbs className="bg-white p-4 rounded mx-auto">
-        {gameState.snapshot.selected > 0 &&
-          gameState.snapshot.selected.map((item, idx) => (
+        {snapshot.selected &&
+          snapshot.score &&
+          snapshot.selected.map((item, idx) => (
             <BreadcrumbItem
               classNames={{
-                item: `text-2xl text-red-400  ${gameState.scores[idx] === 0 ? "text-green-400" : gameState.scores[idx] === -1 ? "text-red-400" : "text-yellow-500"}`,
+                item: `text-2xl text-red-400  ${snapshot.score[idx] === 0 ? "text-green-400" : snapshot.score[idx] === -1 ? "text-red-400" : "text-yellow-500"}`,
                 separator: `text-2xl text-black font-bold`,
               }}
               disableAnimation={true}

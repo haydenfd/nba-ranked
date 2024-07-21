@@ -1,10 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import {App} from "./App";
+import { App } from "./App";
 import { app } from "./firebaseConfig";
 import "./fonts.css";
 import { NextUIProvider } from "@nextui-org/react";
+import { Provider } from "react-redux";
+import { store } from "./Store/store";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -12,6 +14,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <NextUIProvider>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </NextUIProvider>,
 );
