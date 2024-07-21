@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { Button } from "@nextui-org/react";
-import { GuideModal } from "../Modals/GuideModal";
-import { StatsModal } from "../Modals/StatsModal";
+import React from "react";
+import { GuideModal, StatsModal } from "../Modals";
 
 export const Nav = () => {
 

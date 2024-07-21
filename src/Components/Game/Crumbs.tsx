@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import { useSelector } from "react-redux";
-import { RootState } from "../Store/store";
+import { RootState } from "../../Store/store";
 
 export const GuessCrumbs = () => {
   const snapshot = useSelector((state: RootState) => state.snapshot);

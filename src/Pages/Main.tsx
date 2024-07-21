@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Drag } from "../Components/Draggable";
-import { GuessCrumbs } from "../Components/Crumbs";
-import { Nav } from "../Components";
+import { Drag } from "../Components/Game/Draggable";
+import { GuessCrumbs } from "../Components/Game/Crumbs";
+import { Nav } from "../Components/Nav";
 import { useSelector } from "react-redux";
 import { RootState } from "../Store/store";
 

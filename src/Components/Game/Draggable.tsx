@@ -4,14 +4,14 @@ import { Button, Spinner } from "@nextui-org/react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { RootState, AppDispatch } from "../Store/store";
-import { reset, increment } from "../Store/Attempts/attemptsSlice";
+import { RootState, AppDispatch } from "../../Store/store";
+import { reset, increment } from "../../Store/Attempts/attemptsSlice";
 import {
   computeScore,
   setSelectedStore,
-} from "../Store/Snapshot/snapshotSlice";
+} from "../../Store/Snapshot/snapshotSlice";
 import { DroppableStateSnapshot, DropResult } from "react-beautiful-dnd";
-import { PlayerData } from "../Store/Snapshot/snapshotSlice";
+import { PlayerData } from "../../Store/Snapshot/snapshotSlice";
 import { Card } from "./Card";
 
 const x = [
