@@ -108,7 +108,7 @@ const snapshotSlice = createSlice({
           const currPlayerId = state.selected[i].PLAYER_ID;
           const currPlayerCorrectIdx = state.solution_map[currPlayerId];
           let diff = Math.abs(i - currPlayerCorrectIdx);
-          if (diff > 2) {
+          if (diff > 0) {
             diff = -1;
           }
           temp_scores.push(diff);
@@ -116,7 +116,7 @@ const snapshotSlice = createSlice({
 
         state.score = temp_scores;
       }
-      console.log(state.score);
+      //  console.log(state.score);
     },
   },
 });

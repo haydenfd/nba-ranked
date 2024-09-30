@@ -18,7 +18,7 @@ export const GuessCrumbs = (props: GuessCrumbsType) => {
           snapshot.selected.map((item, idx) => (
             <BreadcrumbItem
               classNames={{
-                item: `text-2xl text-red-400  ${snapshot.score[idx] === 0 ? "text-green-400" : snapshot.score[idx] === -1 ? "text-red-400" : "text-yellow-500"}`,
+                item: `text-2xl ${snapshot.score[idx] === 0 ? "text-green-400" : "text-red-400" }`,
                 separator: `text-2xl text-black font-bold`,
               }}
               disableAnimation={true}

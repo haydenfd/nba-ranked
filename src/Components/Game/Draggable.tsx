@@ -239,7 +239,7 @@ export const Drag = () => {
         <section className="w-full">
           <div className="w-1/3 flex flex-row mx-auto items-center justify-center gap-14">
             <Button
-              onClick={() => dispatch(reset())}
+              onClick={() => alert('Non functional!')}
               className="p-6 bg-slate-300 border-[6px] border-slate-700 text-slate-700 text-lg rounded-none font-bold hover:bg-slate-850  hover:border-black"
             >
               Reset
@@ -254,20 +254,7 @@ export const Drag = () => {
           </div>
         </section>
       </div>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top">
-        <ModalContent>
-        {(onClose) => (
-            <>
-            <ModalHeader className="flex flex-col gap-1">This be the guide modal</ModalHeader>
-            <ModalBody>
-                <p> 
-                One Hundo p yo
-                </p>
-            </ModalBody>
-            </>
-        )}
-        </ModalContent>
-    </Modal>
+      
     </>
   );
 };
