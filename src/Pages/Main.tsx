@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Drag } from "../Components/Game/Draggable";
 import { GuessCrumbs } from "../Components/Game/Crumbs";
 import { Nav } from "../Components/Nav";
@@ -6,27 +6,50 @@ import { useSelector } from "react-redux";
 import { RootState } from "../Store/store";
 import { Toaster, toast } from "sonner";
 import { SolutionModal } from "../Components/Modals/SolutionModal"; 
-
+import { useDisclosure } from "@nextui-org/react"; 
+import axios from "axios";
 export const Main = () => {
-  // Access attempts and score from Redux store
+
   const attempts = useSelector((state: RootState) => state.attempts.attempts);
   const score = useSelector((state: RootState) => state.snapshot.score);
 
-  // State to manage modal visibility
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const initializeUser = async () => {
+    const response = await axios.post('http://localhost:8080/users/create');
+    const newUserId = response.data.user_id;
+    const newSessionId = response.data.session_id;
+    return { 
+      newUserId, 
+      newSessionId,
+    };
+  };
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const storedUserId = localStorage.getItem('rank_five_user_id');
+
+      if (!storedUserId) {
+        console.log("Could not find user.");
+        const { newUserId, newSessionId } = await initializeUser(); 
+        localStorage.setItem('rank_five_user_id', newUserId); 
+        localStorage.setItem('rank_five_session_id', newSessionId); 
+      } else {
+        // console.log(`Found: ${storedUserId}`);
+      }
+    };
+
+    checkUser(); 
+  }, []); 
 
   useEffect(() => {
     console.log(`Score is now ${score}`);
 
-    // Open the modal when attempts === 3 or all score elements are 1
     if (attempts === 3 || score.length > 0) {
-      const correctGuesses = score.filter((s) => s !== 1).length;
-
+      const correctGuesses = score.filter((s) => s !== -1).length;
       if (correctGuesses === 5) {
-        setIsModalOpen(true);
+
+        onOpen(); // Open the modal
       }
-    } else {
-      setIsModalOpen(false);
     }
 
     if (attempts < 3 && score.length > 0) {
@@ -44,7 +67,7 @@ export const Main = () => {
         );
       }
     }
-  }, [score, attempts]);
+  }, [score, attempts, onOpen]);
 
   return (
     <div className="w-full h-full flex flex-col pb-10">
@@ -52,10 +75,10 @@ export const Main = () => {
       <Toaster position="top-center" richColors /> {/* Toast notifications */}
       <SolutionModal
         correctGuesses={score.filter((s) => s !== -1).length}
-        isOpen={isModalOpen}
-        onOpenChange={setIsModalOpen}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange} // Close modal on trigger
       /> {/* Modal for end game condition */}
-      <section className="w-3/5 mx-auto text-center my-4">
+      <section className="w-3/5 mx-auto text-center my-20">
         <h2 className="font-bold text-white text-3xl">
           ATTEMPTS LEFT: {3 - attempts}
         </h2>
