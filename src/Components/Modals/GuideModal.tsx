@@ -18,14 +18,14 @@ export function GuideModal() {
         >
           <span className="hidden md:inline text-xl text-white">Guide</span>
         </Button>      
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top">
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top" size="3xl">
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">This be the guide modal</ModalHeader>
               <ModalBody>
                 <p> 
-                  One Hundo p yo
+                  Poop
                 </p>
               </ModalBody>
             </>
