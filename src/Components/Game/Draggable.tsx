@@ -13,6 +13,7 @@ import {
 import { DroppableStateSnapshot, DropResult } from "react-beautiful-dnd";
 import { PlayerData } from "../../Store/Snapshot/snapshotSlice";
 import { Card } from "./Card";
+import {Modal, ModalContent, ModalHeader, ModalBody, useDisclosure} from "@nextui-org/react";
 
 const x = [
   {
@@ -97,11 +98,12 @@ const getListStyle = (
 });
 
 export const Drag = () => {
-  // const { setItems, gameState, setSelected } = useContext(GameStateContext);
+
   const [items, setItems] = useState<PlayerData[]>(x);
   const [selected, setSelected] = useState<PlayerData[]>([]);
   const _selected = useSelector((state: RootState) => state.snapshot.selected);
   const _score = useSelector((state: RootState) => state.snapshot.score);
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -143,7 +145,7 @@ export const Drag = () => {
     dispatch(increment());
     dispatch(setSelectedStore(selected));
     dispatch(computeScore());
-
+    onOpen();
     if (_score.every((value) => value === 0)) {
       console.log("winner winner chicken dinner");
     }
@@ -252,6 +254,20 @@ export const Drag = () => {
           </div>
         </section>
       </div>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top">
+        <ModalContent>
+        {(onClose) => (
+            <>
+            <ModalHeader className="flex flex-col gap-1">This be the guide modal</ModalHeader>
+            <ModalBody>
+                <p> 
+                One Hundo p yo
+                </p>
+            </ModalBody>
+            </>
+        )}
+        </ModalContent>
+    </Modal>
     </>
   );
 };

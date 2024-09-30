@@ -3,11 +3,15 @@ import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
 
-export const GuessCrumbs = () => {
+type GuessCrumbsType = {
+  isVisible: boolean
+}
+
+export const GuessCrumbs = (props: GuessCrumbsType) => {
   const snapshot = useSelector((state: RootState) => state.snapshot);
 
   return (
-    <div className={`w-full mx-auto flex justify-center `}>
+    <div className={`w-full mx-auto flex justify-center ${props.isVisible ? 'visible' : 'invisible'}`}>
       <Breadcrumbs className="bg-white p-4 rounded mx-auto">
         {snapshot.selected &&
           snapshot.score &&
