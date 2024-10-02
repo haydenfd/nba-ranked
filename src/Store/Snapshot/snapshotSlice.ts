@@ -89,18 +89,23 @@ interface SnapshotState {
 }
 
 const initialSnapshotState: SnapshotState = {
-  selected: selected_init,
-  solution_map: solution_map_init,
-  score: scores_init,
+  selected: [],
+  solution_map: {},
+  score: [],
 };
 
 const snapshotSlice = createSlice({
   name: "snapshot",
   initialState: initialSnapshotState,
   reducers: {
+
     setSelectedStore: (state, action: PayloadAction<PlayerData[]>) => {
       state.selected = action.payload;
     },
+    setSolutionMap: (state, action: PayloadAction<SolutionMapInterface>) => {
+      state.solution_map = action.payload;
+    },
+    
     computeScore: (state) => {
       const temp_scores = [];
       if (state.selected && state.solution_map) {
@@ -116,11 +121,10 @@ const snapshotSlice = createSlice({
 
         state.score = temp_scores;
       }
-      //  console.log(state.score);
     },
   },
 });
 
 export default snapshotSlice.reducer;
 
-export const { computeScore, setSelectedStore } = snapshotSlice.actions;
+export const { setSelectedStore, setSolutionMap, computeScore} = snapshotSlice.actions;

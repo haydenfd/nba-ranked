@@ -15,66 +15,9 @@ import { PlayerData } from "../../Store/Snapshot/snapshotSlice";
 import { Card } from "./Card";
 import {Modal, ModalContent, ModalHeader, ModalBody, useDisclosure} from "@nextui-org/react";
 
-const x = [
-  {
-    _id: "669567863ef13914a0300ca3",
-    PLAYER_NAME: "LeBron James",
-    PLAYER_ID: "2544",
-    FROM_YEAR: 2003,
-    PPG: 27.1,
-    GP: 1484,
-    EXP: 21,
-    TO_YEAR: 2024,
-    __v: 0,
-  },
-  {
-    _id: "669567863ef13914a0300a73",
-    PLAYER_NAME: "Kyrie Irving",
-    PLAYER_ID: "202681",
-    FROM_YEAR: 2011,
-    PPG: 23.8,
-    GP: 781,
-    EXP: 13,
-    TO_YEAR: 2024,
-    __v: 0,
-  },
-  {
-    _id: "669567863ef13914a0300d7c",
-    PLAYER_NAME: "Jimmy Butler",
-    PLAYER_ID: "202710",
-    FROM_YEAR: 2011,
-    PPG: 18.4,
-    GP: 869,
-    EXP: 13,
-    TO_YEAR: 2024,
-    __v: 0,
-  },
-  {
-    _id: "669567863ef13914a0300dcd",
-    PLAYER_NAME: "Chris Paul",
-    PLAYER_ID: "101108",
-    FROM_YEAR: 2005,
-    PPG: 17.6,
-    GP: 1262,
-    EXP: 19,
-    TO_YEAR: 2024,
-    __v: 0,
-  },
-  {
-    _id: "669567863ef13914a0300d22",
-    PLAYER_NAME: "Nassir Little",
-    PLAYER_ID: "1629642",
-    FROM_YEAR: 2019,
-    PPG: 5.6,
-    GP: 231,
-    EXP: 5,
-    TO_YEAR: 2024,
-    __v: 0,
-  },
-];
 
 const grid = 8;
-const itemHeight = 85;
+const itemHeight = 90;
 const maxItems = 5;
 // const containerPadding = 4;
 const calculatedHeight = itemHeight * maxItems;
@@ -99,7 +42,7 @@ const getListStyle = (
 
 export const Drag = () => {
 
-  const [items, setItems] = useState<PlayerData[]>(x);
+  const [items, setItems] = useState<PlayerData[]>([]);
   const [selected, setSelected] = useState<PlayerData[]>([]);
   const _selected = useSelector((state: RootState) => state.snapshot.selected);
   const _score = useSelector((state: RootState) => state.snapshot.score);
@@ -153,10 +96,10 @@ export const Drag = () => {
 
   return (
     <>
-      <div className="w-full flex flex-col items-center space-y-10 mt-28 bg-green-500">
+      <div className="w-full flex flex-col items-center space-y-10 mt-10 bg-green-500">
         <div className="w-2/3 flex flex-row justify-around px-4 py-2">
           <DragDropContext onDragEnd={onDragEnd}>
-            <div className="w-1/3 flex-nowrap">
+            <div className="w-[40%] flex-nowrap">
               <div className="text-3xl font-bold text-white w-full text-center underline mb-4">
                 PLAYERS
               </div>
@@ -195,7 +138,7 @@ export const Drag = () => {
               </Droppable>
             </div>
 
-            <div className="w-1/3 flex-nowrap">
+            <div className="w-[40%] flex-nowrap">
               <div className="text-3xl font-bold text-white w-full text-center underline mb-4">
                 GUESSES
               </div>
