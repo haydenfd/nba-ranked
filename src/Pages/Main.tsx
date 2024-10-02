@@ -2,12 +2,14 @@ import React, { useEffect } from "react";
 import { Drag } from "../Components/Game/Draggable";
 import { GuessCrumbs } from "../Components/Game/Crumbs";
 import { Nav } from "../Components/Nav";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../Store/store";
 import { Toaster, toast } from "sonner";
 import { SolutionModal } from "../Components/Modals/SolutionModal"; 
 import { useDisclosure } from "@nextui-org/react"; 
+import { setPlayers, setSolutionMap } from "../Store/Snapshot/snapshotSlice";
 import axios from "axios";
+
 export const Main = () => {
 
   const attempts = useSelector((state: RootState) => state.attempts.attempts);

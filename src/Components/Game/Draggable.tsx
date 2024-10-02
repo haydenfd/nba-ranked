@@ -8,7 +8,7 @@ import { RootState, AppDispatch } from "../../Store/store";
 import { reset, increment } from "../../Store/Attempts/attemptsSlice";
 import {
   computeScore,
-  setSelectedStore,
+  setPlayers,
 } from "../../Store/Snapshot/snapshotSlice";
 import { DroppableStateSnapshot, DropResult } from "react-beautiful-dnd";
 import { PlayerData } from "../../Store/Snapshot/snapshotSlice";
@@ -44,7 +44,7 @@ export const Drag = () => {
 
   const [items, setItems] = useState<PlayerData[]>([]);
   const [selected, setSelected] = useState<PlayerData[]>([]);
-  const _selected = useSelector((state: RootState) => state.snapshot.selected);
+  const _selected = useSelector((state: RootState) => state.snapshot.players);
   const _score = useSelector((state: RootState) => state.snapshot.score);
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
 

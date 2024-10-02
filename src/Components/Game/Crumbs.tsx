@@ -13,9 +13,9 @@ export const GuessCrumbs = (props: GuessCrumbsType) => {
   return (
     <div className={`w-full mx-auto flex justify-center ${props.isVisible ? 'visible' : 'invisible'}`}>
       <Breadcrumbs className="bg-white p-4 rounded mx-auto">
-        {snapshot.selected &&
+        {snapshot.players &&
           snapshot.score &&
-          snapshot.selected.map((item, idx) => (
+          snapshot.players.map((item, idx) => (
             <BreadcrumbItem
               classNames={{
                 item: `text-2xl ${snapshot.score[idx] === 0 ? "text-green-400" : "text-red-400" }`,

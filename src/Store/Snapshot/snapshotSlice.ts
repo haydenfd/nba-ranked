@@ -83,13 +83,13 @@ const solution_map_init = {
 const scores_init = [0, 1, 0, 1, 0];
 
 interface SnapshotState {
-  selected: PlayerData[] | null;
+  players: PlayerData[] | null;
   solution_map: SolutionMapInterface | null;
   score: number[];
 }
 
 const initialSnapshotState: SnapshotState = {
-  selected: [],
+  players: [],
   solution_map: {},
   score: [],
 };
@@ -99,8 +99,8 @@ const snapshotSlice = createSlice({
   initialState: initialSnapshotState,
   reducers: {
 
-    setSelectedStore: (state, action: PayloadAction<PlayerData[]>) => {
-      state.selected = action.payload;
+    setPlayers: (state, action: PayloadAction<PlayerData[]>) => {
+      state.players = action.payload;
     },
     setSolutionMap: (state, action: PayloadAction<SolutionMapInterface>) => {
       state.solution_map = action.payload;
@@ -108,9 +108,9 @@ const snapshotSlice = createSlice({
     
     computeScore: (state) => {
       const temp_scores = [];
-      if (state.selected && state.solution_map) {
-        for (let i = 0; i < state.selected.length; i++) {
-          const currPlayerId = state.selected[i].PLAYER_ID;
+      if (state.players && state.solution_map) {
+        for (let i = 0; i < state.players.length; i++) {
+          const currPlayerId = state.players[i].PLAYER_ID;
           const currPlayerCorrectIdx = state.solution_map[currPlayerId];
           let diff = Math.abs(i - currPlayerCorrectIdx);
           if (diff > 0) {
@@ -127,4 +127,4 @@ const snapshotSlice = createSlice({
 
 export default snapshotSlice.reducer;
 
-export const { setSelectedStore, setSolutionMap, computeScore} = snapshotSlice.actions;
+export const { setPlayers, setSolutionMap, computeScore} = snapshotSlice.actions;
