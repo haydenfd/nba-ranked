@@ -48,7 +48,6 @@ export const Main = () => {
       const storedUserId = localStorage.getItem('rank_five_user_id');
 
       if (!storedUserId) {
-        console.log("Could not find user.");
         const { newUserId, newSessionId, players, solution_map } = await initializeUser(); 
         localStorage.setItem('rank_five_user_id', newUserId); 
         localStorage.setItem('rank_five_session_id', newSessionId); 
@@ -58,6 +57,7 @@ export const Main = () => {
           solution_map: solution_map,
         }))
       } else {
+
         // retrieve the current session. 
 
         if (localStorage.getItem('rank_five_user_id') && localStorage.getItem('rank_five_session_id')) {
@@ -80,7 +80,7 @@ export const Main = () => {
         onOpen();
       } else {
         if (attempts === 2) {
-          console.log("U lost!")
+          onOpen();
         } 
         else {
           toast(
