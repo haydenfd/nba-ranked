@@ -2,6 +2,7 @@ import React from "react";
 import { Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../Store/store";
+import { PlayerDataInterface } from "../../Types/store";
 
 type GuessCrumbsType = {
   isVisible: boolean
@@ -16,7 +17,7 @@ export const GuessCrumbs = (props: GuessCrumbsType) => {
       <Breadcrumbs className="bg-white p-4 rounded mx-auto">
         {snapshot.guesses &&
           snapshot.scores &&
-          snapshot.guesses.map((item, idx) => (
+          snapshot.guesses.map((item:PlayerDataInterface, idx:number) => (
             <BreadcrumbItem
               classNames={{
                 item: `text-2xl ${snapshot.scores[idx] === 0 ? "text-green-400" : "text-red-400" }`,

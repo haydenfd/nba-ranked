@@ -62,10 +62,19 @@ export const Drag = () => {
     }
   };
 
-  const handleSubmitAttempt = () => {
+  const handleSubmitAttempt = async () => {
     dispatch(incrementAttempts());
     dispatch(mutateGuesses(guesses));
     dispatch(computeScore());
+
+    // const endpoint = `http://localhost:8080/session/update/${localStorage.getItem('rank_five_user_id')}/${localStorage.getItem('rank_five_session_id')}`;
+
+    // const response = await axios.put(endpoint, {
+    //   attempts: attempts,
+    //   session_active: !isGameOver,
+    // });
+
+    // console.log(response);
 
   }
 

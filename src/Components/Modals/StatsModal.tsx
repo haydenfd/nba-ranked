@@ -21,7 +21,7 @@ export function StatsModal() {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">This be the guide modal</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Here are your stats!</ModalHeader>
               <ModalBody>
                 <p> 
                   One Hundo p yo
