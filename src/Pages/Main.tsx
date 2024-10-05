@@ -7,13 +7,12 @@ import { RootState } from "../Store/store";
 import { Toaster, toast } from "sonner";
 import { SolutionModal } from "../Components/Modals/SolutionModal"; 
 import { useDisclosure } from "@nextui-org/react"; 
-import { setPlayers, setSolutionMap } from "../Store/Snapshot/snapshotSlice";
 import axios from "axios";
 
 export const Main = () => {
 
   const attempts = useSelector((state: RootState) => state.attempts.attempts);
-  const score = useSelector((state: RootState) => state.snapshot.score);
+  const score = useSelector((state: RootState) => state.snapshot.scores);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const initializeUser = async () => {
@@ -47,18 +46,19 @@ export const Main = () => {
   }, []); 
 
   useEffect(() => {
+
     console.log(`Score is now ${score}`);
 
-    if (attempts === 3 || score.length > 0) {
-      const correctGuesses = score.filter((s) => s !== -1).length;
+    if (attempts === 2 || score.length > 0) {
+      const correctGuesses = score.filter((s) => s !== 1).length;
       if (correctGuesses === 5) {
 
-        onOpen(); // Open the modal
+        onOpen(); 
       }
     }
 
     if (attempts < 3 && score.length > 0) {
-      const correctGuesses = score.filter((s) => s !== -1).length;
+      const correctGuesses = score.filter((s) => s !== 1).length;
 
       if (correctGuesses < 5) {
         toast(
@@ -79,13 +79,13 @@ export const Main = () => {
       <Nav />
       <Toaster position="top-center" richColors /> {/* Toast notifications */}
       <SolutionModal
-        correctGuesses={score.filter((s) => s !== -1).length}
+        correctGuesses={score.filter((s) => s !== 1).length}
         isOpen={isOpen}
         onOpenChange={onOpenChange} // Close modal on trigger
       /> {/* Modal for end game condition */}
       <section className="w-3/5 mx-auto text-center my-8">
         <h2 className="font-bold text-white text-3xl">
-          ATTEMPTS LEFT: {3 - attempts}
+          ATTEMPTS LEFT: {2 - attempts}
         </h2>
       </section>
       <GuessCrumbs isVisible={attempts > 0} />

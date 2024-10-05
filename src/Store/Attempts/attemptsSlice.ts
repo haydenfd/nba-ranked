@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface AttemptsState {
-  attempts: 0 | 1 | 2 | 3;
+  attempts: 0 | 1 | 2;
 }
 
 const initialAttemptsState: AttemptsState = {
@@ -12,8 +12,8 @@ const attemptsSlice = createSlice({
   name: "attempts",
   initialState: initialAttemptsState,
   reducers: {
-    increment: (state) => {
-      if (state.attempts !== 3) {
+    incrementAttempts: (state) => {
+      if (state.attempts !== 2) {
         state.attempts += 1;
       }
     },
@@ -25,4 +25,4 @@ const attemptsSlice = createSlice({
 
 export default attemptsSlice.reducer;
 
-export const { increment, reset } = attemptsSlice.actions;
+export const { incrementAttempts, reset } = attemptsSlice.actions;

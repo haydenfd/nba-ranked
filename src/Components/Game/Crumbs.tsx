@@ -8,17 +8,18 @@ type GuessCrumbsType = {
 }
 
 export const GuessCrumbs = (props: GuessCrumbsType) => {
+
   const snapshot = useSelector((state: RootState) => state.snapshot);
 
   return (
     <div className={`w-full mx-auto flex justify-center ${props.isVisible ? 'visible' : 'invisible'}`}>
       <Breadcrumbs className="bg-white p-4 rounded mx-auto">
-        {snapshot.players &&
-          snapshot.score &&
-          snapshot.players.map((item, idx) => (
+        {snapshot.guesses &&
+          snapshot.scores &&
+          snapshot.guesses.map((item, idx) => (
             <BreadcrumbItem
               classNames={{
-                item: `text-2xl ${snapshot.score[idx] === 0 ? "text-green-400" : "text-red-400" }`,
+                item: `text-2xl ${snapshot.scores[idx] === 0 ? "text-green-400" : "text-red-400" }`,
                 separator: `text-2xl text-black font-bold`,
               }}
               disableAnimation={true}

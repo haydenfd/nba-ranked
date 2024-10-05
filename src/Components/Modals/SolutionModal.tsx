@@ -13,9 +13,19 @@ export const SolutionModal: React.FC<SolutionModalProps> = ({ correctGuesses, is
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top" size="3xl">
         <ModalContent>
           <>
-            <ModalHeader className="flex flex-col gap-1">Solution Modal</ModalHeader>
+            <ModalHeader className={`${correctGuesses === 5 ? "text-green-600" : "text-red-400"} text-center text-2xl font-bold flex flex-1 flex-col`}>
+            {
+                  correctGuesses === 5? "You won!": "You lost!"
+            }
+            </ModalHeader>
             <ModalBody>
-              <p>You got {correctGuesses} right!</p>
+              {
+                correctGuesses === 5? "" : (
+                  <>
+                    
+                  </>
+                )
+              }
             </ModalBody>
           </>
         </ModalContent>
