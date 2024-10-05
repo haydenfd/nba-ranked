@@ -12,7 +12,7 @@ import { initializeGame } from "../Store/Snapshot/snapshotSlice";
 
 export const Main = () => {
 
-  const attempts = useSelector((state: RootState) => state.attempts.attempts);
+  const attempts = useSelector((state: RootState) => state.snapshot.attempts);
   const score = useSelector((state: RootState) => state.snapshot.scores);
   const dispatch = useDispatch();
 
@@ -53,8 +53,7 @@ export const Main = () => {
         const { newUserId, newSessionId, players, solution_map } = await initializeUser(); 
         localStorage.setItem('rank_five_user_id', newUserId); 
         localStorage.setItem('rank_five_session_id', newSessionId); 
-        // console.log(players);
-        // console.log(solution_map);
+   
         dispatch(initializeGame({
           players: players,
           solution_map: solution_map,

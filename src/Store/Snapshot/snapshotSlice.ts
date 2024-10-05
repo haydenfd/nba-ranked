@@ -16,19 +16,22 @@ interface SolutionMapInterface {
   [key: string]: number;
 }
 
+type AttemptsType = 0 | 1 | 2;
 
-interface SnapshotState {
+interface SnapshotInterface {
   players: PlayerDataInterface[];
   guesses: PlayerDataInterface[];
   solution_map: SolutionMapInterface;
+  attempts: AttemptsType,
   scores: number[];
 }
 
-const initialSnapshotState: SnapshotState = {
+const initialSnapshotState: SnapshotInterface = {
   players: [],
   guesses: [],
   solution_map: {},
   scores: [],
+  attempts: 0,
 };
 
 interface InitializeGamePayload {
@@ -37,10 +40,11 @@ interface InitializeGamePayload {
 }
 
 const snapshotSlice = createSlice({
+
   name: "snapshot",
   initialState: initialSnapshotState,
-  reducers: {
 
+  reducers: {
     initializeGame: (state, action: PayloadAction<InitializeGamePayload>) => {
       const { players, solution_map } = action.payload;
       state.players = players;
@@ -48,7 +52,14 @@ const snapshotSlice = createSlice({
       console.log(state.players);
       console.log(state.solution_map)
     },    
-
+    incrementAttempts: (state) => {
+      if (state.attempts !== 2) {
+        state.attempts += 1;
+      }
+    },
+    resetAttempts: (state) => {
+      state.attempts = 0;
+    },
     mutateGuesses: (state, action) => {
       state.guesses = action.payload;
     },
@@ -76,4 +87,4 @@ const snapshotSlice = createSlice({
 
 export default snapshotSlice.reducer;
 
-export const { initializeGame , computeScore, mutateGuesses} = snapshotSlice.actions;
+export const { initializeGame , computeScore, mutateGuesses, incrementAttempts, resetAttempts} = snapshotSlice.actions;

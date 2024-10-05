@@ -1,10 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import attemptsReducer from "./Attempts/attemptsSlice";
 import snapshotReducer from "./Snapshot/snapshotSlice";
 
 export const store = configureStore({
   reducer: {
-    attempts: attemptsReducer,
     snapshot: snapshotReducer,
   },
 });

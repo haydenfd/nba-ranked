@@ -6,8 +6,7 @@ import { DropResult, DragDropContext, Draggable, Droppable} from 'react-beautifu
 import { Card } from './Card'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from "../../Store/store";
-import { incrementAttempts } from '../../Store/Attempts/attemptsSlice'
-import { mutateGuesses } from '../../Store/Snapshot/snapshotSlice'
+import { mutateGuesses, incrementAttempts } from '../../Store/Snapshot/snapshotSlice'
 
 export const Drag = () => {
 
