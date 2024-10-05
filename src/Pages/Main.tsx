@@ -8,37 +8,64 @@ import { Toaster, toast } from "sonner";
 import { SolutionModal } from "../Components/Modals/SolutionModal"; 
 import { useDisclosure } from "@nextui-org/react"; 
 import axios from "axios";
+import { initializeGame } from "../Store/Snapshot/snapshotSlice";
 
 export const Main = () => {
 
   const attempts = useSelector((state: RootState) => state.attempts.attempts);
   const score = useSelector((state: RootState) => state.snapshot.scores);
+  const dispatch = useDispatch();
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   const initializeUser = async () => {
     const response = await axios.post('http://localhost:8080/users/create');
     const newUserId = response.data.user_id;
     const newSessionId = response.data.session_id;
     const players = response.data.players;
+    const solution_map = response.data.solution_map;
     return { 
       newUserId, 
       newSessionId,
       players,
+      solution_map,
     };
   };
 
+
   useEffect(() => {
+    const fetchSession = async (user_id:string | null, session_id: string | null) => {
+      console.log(`http://localhost:8080/session/retrieve/${user_id}/${session_id}`);
+      const response = await axios.get(`http://localhost:8080/session/retrieve/${user_id}/${session_id}`);
+      const session = response.data;
+      dispatch(initializeGame({
+        players: session.players,
+        solution_map: session.solution_map,
+      }))
+  
+    }
+
     const checkUser = async () => {
       const storedUserId = localStorage.getItem('rank_five_user_id');
 
       if (!storedUserId) {
         console.log("Could not find user.");
-        const { newUserId, newSessionId, players } = await initializeUser(); 
+        const { newUserId, newSessionId, players, solution_map } = await initializeUser(); 
         localStorage.setItem('rank_five_user_id', newUserId); 
         localStorage.setItem('rank_five_session_id', newSessionId); 
-        console.log(players);
+        // console.log(players);
+        // console.log(solution_map);
+        dispatch(initializeGame({
+          players: players,
+          solution_map: solution_map,
+        }))
       } else {
-        // console.log(`Found: ${storedUserId}`);
+        // retrieve the current session. 
+
+        if (localStorage.getItem('rank_five_user_id') && localStorage.getItem('rank_five_session_id')) {
+          await fetchSession(localStorage.getItem('rank_five_user_id'), localStorage.getItem('rank_five_session_id'));
+
+        }
       }
     };
 
@@ -52,7 +79,6 @@ export const Main = () => {
     if (attempts === 2 || score.length > 0) {
       const correctGuesses = score.filter((s) => s !== 1).length;
       if (correctGuesses === 5) {
-
         onOpen(); 
       }
     }
@@ -77,12 +103,12 @@ export const Main = () => {
   return (
     <div className="w-full h-full flex flex-col pb-4">
       <Nav />
-      <Toaster position="top-center" richColors /> {/* Toast notifications */}
+      <Toaster position="top-center" richColors /> 
       <SolutionModal
         correctGuesses={score.filter((s) => s !== 1).length}
         isOpen={isOpen}
-        onOpenChange={onOpenChange} // Close modal on trigger
-      /> {/* Modal for end game condition */}
+        onOpenChange={onOpenChange} 
+      /> 
       <section className="w-3/5 mx-auto text-center my-8">
         <h2 className="font-bold text-white text-3xl">
           ATTEMPTS LEFT: {2 - attempts}

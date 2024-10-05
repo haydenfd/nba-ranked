@@ -1,19 +1,29 @@
-import React, {useState} from 'react'
-import { getListStyle, getItemStyle, initialPlayers} from './DraggableUtils'
+import React, {useState, useEffect} from 'react'
+import { getListStyle, getItemStyle} from './DraggableUtils'
 import { Button } from '@nextui-org/react'
 import { computeScore, PlayerDataInterface } from '../../Store/Snapshot/snapshotSlice'
 import { DropResult, DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd'
 import { Card } from './Card'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from "../../Store/store";
 import { incrementAttempts } from '../../Store/Attempts/attemptsSlice'
 import { mutateGuesses } from '../../Store/Snapshot/snapshotSlice'
 
 export const Drag = () => {
 
+  const snap_players = useSelector((state: RootState) => state.snapshot.players);
+
 
   const dispatch = useDispatch();
-  const [players, setPlayers] = useState<PlayerDataInterface[]>(initialPlayers);
+  const [players, setPlayers] = useState<PlayerDataInterface[]>(snap_players);
   const [guesses, setGuesses] = useState<PlayerDataInterface[]>([]);
+
+  useEffect(() => {
+    if (snap_players && snap_players.length > 0) {
+      setPlayers(snap_players);
+    }
+  }, [snap_players]); 
+
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
 
@@ -91,7 +101,7 @@ export const Drag = () => {
                               provided.draggableProps.style,
                             )}
                           >
-                            <Card id={player.PLAYER_ID} name={player.PLAYER_NAME} />
+                            <Card id={player.PLAYER_ID} name={player.PLAYER_NAME} ppg={String(player.PPG)}/>
                           </div>
                         )}
                       </Draggable>
@@ -131,7 +141,7 @@ export const Drag = () => {
                               provided.draggableProps.style,
                             )}
                           >
-                            <Card id={guess.PLAYER_ID} name={guess.PLAYER_NAME} />
+                            <Card id={guess.PLAYER_ID} name={guess.PLAYER_NAME} ppg={String(guess.PPG)}/>
                           </div>
                         )}
                       </Draggable>
@@ -145,11 +155,6 @@ export const Drag = () => {
         </div>      
       <section className="w-full">
            <div className="w-1/3 flex flex-row mx-auto items-center justify-center gap-14">
-             <Button
-               onClick={() => alert('Non functional!')}
-               className="p-6 bg-slate-300 border-[6px] border-slate-700 text-slate-700 text-lg rounded-none font-bold hover:bg-slate-850  hover:border-black">
-               Reset
-             </Button>
              <Button
                onClick={handleSubmitAttempt}
                isDisabled={!(guesses.length === 5)}

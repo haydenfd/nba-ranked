@@ -16,17 +16,9 @@ interface SolutionMapInterface {
   [key: string]: number;
 }
 
-const solution_map_init = {
-  "2544": 0,
-  "101108": 3,
-  "202681": 1,
-  "202710": 2,
-  "1629642": 4,
-};
-
 
 interface SnapshotState {
-  players: PlayerDataInterface[] | null;
+  players: PlayerDataInterface[];
   guesses: PlayerDataInterface[];
   solution_map: SolutionMapInterface;
   scores: number[];
@@ -35,13 +27,7 @@ interface SnapshotState {
 const initialSnapshotState: SnapshotState = {
   players: [],
   guesses: [],
-  solution_map: {
-    "2544": 0,
-    "101108": 3,
-    "202681": 1,
-    "202710": 2,
-    "1629642": 4,
-  },
+  solution_map: {},
   scores: [],
 };
 
@@ -59,18 +45,19 @@ const snapshotSlice = createSlice({
       const { players, solution_map } = action.payload;
       state.players = players;
       state.solution_map = solution_map;
+      console.log(state.players);
+      console.log(state.solution_map)
     },    
 
     mutateGuesses: (state, action) => {
       state.guesses = action.payload;
-      console.log(state.guesses);
     },
 
     computeScore: (state) => {
       const temp_scores = [];
-      console.log('65')
+
       if (state.guesses.length > 0) {
-        console.log('ran');
+
         for (let i = 0; i < state.guesses.length; i++) {
           const currPlayerId = state.guesses[i].PLAYER_ID;
           const currPlayerCorrectIdx = state.solution_map[currPlayerId];
@@ -82,7 +69,6 @@ const snapshotSlice = createSlice({
         }
 
         state.scores = temp_scores;
-        console.log(temp_scores);
       }
     },
   },
