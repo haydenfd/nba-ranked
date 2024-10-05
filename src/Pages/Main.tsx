@@ -42,7 +42,6 @@ export const Main = () => {
         players: session.players,
         solution_map: session.solution_map,
       }))
-  
     }
 
     const checkUser = async () => {
@@ -73,31 +72,32 @@ export const Main = () => {
 
   useEffect(() => {
 
-    console.log(`Score is now ${score}`);
+    if (score.length > 0) {
 
-    if (attempts === 2 || score.length > 0) {
       const correctGuesses = score.filter((s) => s !== 1).length;
+
       if (correctGuesses === 5) {
-        onOpen(); 
+        onOpen();
+      } else {
+        if (attempts === 2) {
+          console.log("U lost!")
+        } 
+        else {
+          toast(
+            `You got ${correctGuesses} guess${
+              correctGuesses === 1 ? "" : "es"
+            } right!`,
+            {
+              position: "top-center",
+              duration: 3000,
+            }
+          );
+        }
       }
     }
 
-    if (attempts < 3 && score.length > 0) {
-      const correctGuesses = score.filter((s) => s !== 1).length;
-
-      if (correctGuesses < 5) {
-        toast(
-          `You got ${correctGuesses} guess${
-            correctGuesses === 1 ? "" : "es"
-          } right!`,
-          {
-            position: "top-center",
-            duration: 3000,
-          }
-        );
-      }
-    }
-  }, [score, attempts, onOpen]);
+    
+  }, [score, attempts]);
 
   return (
     <div className="w-full h-full flex flex-col pb-4">

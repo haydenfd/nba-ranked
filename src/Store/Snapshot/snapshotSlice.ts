@@ -45,6 +45,15 @@ const snapshotSlice = createSlice({
   initialState: initialSnapshotState,
 
   reducers: {
+
+    resetGameState: (state) => {
+      state.attempts = 0;
+      state.players = [];
+      state.guesses = [];
+      state.scores = [];
+      state.solution_map = {};
+    },
+
     initializeGame: (state, action: PayloadAction<InitializeGamePayload>) => {
       const { players, solution_map } = action.payload;
       state.players = players;
@@ -56,9 +65,6 @@ const snapshotSlice = createSlice({
       if (state.attempts !== 2) {
         state.attempts += 1;
       }
-    },
-    resetAttempts: (state) => {
-      state.attempts = 0;
     },
     mutateGuesses: (state, action) => {
       state.guesses = action.payload;
@@ -87,4 +93,4 @@ const snapshotSlice = createSlice({
 
 export default snapshotSlice.reducer;
 
-export const { initializeGame , computeScore, mutateGuesses, incrementAttempts, resetAttempts} = snapshotSlice.actions;
+export const { initializeGame , computeScore, mutateGuesses, incrementAttempts, resetGameState} = snapshotSlice.actions;
