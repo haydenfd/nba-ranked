@@ -1,3 +1,4 @@
+'use client'
 import {
   DndContext,
   rectIntersection,
@@ -12,7 +13,7 @@ import {
   verticalListSortingStrategy
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const initialPlayers = [
   "LeBron James",
@@ -46,6 +47,11 @@ function SortableItem({ id }: { id: string }) {
 
 export default function PlayerList() {
   const [players, setPlayers] = useState(initialPlayers);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -61,6 +67,8 @@ export default function PlayerList() {
       setPlayers(arrayMove(players, oldIndex, newIndex));
     }
   };
+
+  if (!hasMounted) return null; // prevent hydration mismatch
 
   return (
     <DndContext
