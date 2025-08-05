@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
+import { UserInterface } from "@/store/useUserStore";
 
 const mongoUri = process.env.MONGODB_URI!;
 const mongoClient = new MongoClient(mongoUri);
@@ -59,7 +60,7 @@ export async function POST(req: NextRequest) {
       if (!user) {
         console.error("User not found while updating stats");
       } else {
-        const updatedStats: any = {
+        const updatedStats: Partial<UserInterface> = {
           games_played: (user.games_played ?? 0) + 1,
         };
 
