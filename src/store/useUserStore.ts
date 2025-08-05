@@ -1,17 +1,13 @@
 import {create} from 'zustand';
 
-export interface UserStatsInterface {
-    gamesPlayed: number;
-    gamesWon: number;
-    currentStreak: number;
-    longestStreak: number;
-    guessDistribution: number[];
+export interface UserInterface {
+  user_id: string;
+  games_played: number;
+  games_won: number;
+  current_streak: number;
+  longest_streak: number;
+  attempts_per_win_distribution: [number, number, number];
 }
-
-export interface UserInterface extends UserStatsInterface {
-    userId: string;
-}
-
 
 export interface UserStoreInterface {
     user: UserInterface | null;

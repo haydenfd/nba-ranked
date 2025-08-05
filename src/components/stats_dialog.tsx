@@ -25,22 +25,22 @@ export function StatsDialog({
   const statItems = [
     {
       title: "Games Played",
-      value: user.gamesPlayed,
+      value: user.games_played,
       icon: <Play className="w-5 h-5 text-nba-orange" />,
     },
     {
       title: "Games Won",
-      value: user.gamesWon,
+      value: user.games_won,
       icon: <Trophy className="w-5 h-5 text-nba-orange" />,
     },
     {
       title: "Current Streak",
-      value: user.currentStreak,
+      value: user.current_streak,
       icon: <Flame className="w-5 h-5 text-nba-orange" />,
     },
     {
       title: "Longest Streak",
-      value: user.longestStreak,
+      value: user.longest_streak,
       icon: <TrendingUp className="w-5 h-5 text-nba-orange" />,
     },
     {
@@ -79,11 +79,11 @@ export function StatsDialog({
 }
 
 function computeAvgAttempts(user: {
-  guessDistribution: number[];
+  attempts_per_win_distribution: [number, number, number];
 }): string {
-  const totalWins = user.guessDistribution.reduce((a, b) => a + b, 0);
+  const totalWins = user?.attempts_per_win_distribution?.reduce((a, b) => a + b, 0) ?? 0;
   if (totalWins === 0) return "—";
-  const totalAttempts = user.guessDistribution.reduce(
+  const totalAttempts = user.attempts_per_win_distribution.reduce(
     (sum, count, i) => sum + count * (i + 1),
     0
   );
